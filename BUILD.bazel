@@ -8,9 +8,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # link as node_modules/@demo/<name>. Call it "pkg", the name rules_js links.
 # gazelle:js_npm_package_target_name pkg
 
-# The jest.axl Starlark plugin (tools/gazelle/jest.axl) is loaded but switched
-# off until step 6.
-# gazelle:jest disabled
+# The jest.axl Starlark plugin (tools/gazelle/jest.axl) generates a jest_test
+# in every package with *.test.ts[x] files.
+# gazelle:jest enabled
 
 npm_link_all_packages(name = "node_modules")
 

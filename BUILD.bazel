@@ -1,3 +1,5 @@
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
 # Gazelle directives live in BUILD files as "load-bearing comments".
 # They are inherited by every package below this one.
 
@@ -13,3 +15,5 @@
 # The jest.axl Starlark plugin (tools/gazelle/jest.axl) is loaded but switched
 # off until step 6.
 # gazelle:jest disabled
+
+npm_link_all_packages(name = "node_modules")

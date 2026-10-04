@@ -1,0 +1,60 @@
+"BazelCon 2026 workshop: rules_{js|ts}: JavaScript & TypeScript with Bazel"
+
+module(name = "rules_js_ts_workshop")
+
+# Node.js: Bazel downloads the version named in .nvmrc, the same file nvm and
+# other non-Bazel tooling read, so step 1 and the Bazel steps agree.
+bazel_dep(name = "rules_nodejs", version = "6.7.4")
+
+node = use_extension("@rules_nodejs//nodejs:extensions.bzl", "node")
+node.toolchain(node_version_from_nvmrc = "//:.nvmrc")
+
+# JavaScript: npm packages from pnpm-lock.yaml, js_library, js_binary, ...
+bazel_dep(name = "aspect_rules_js", version = "3.5.1")
+
+npm = use_extension("@aspect_rules_js//npm:extensions.bzl", "npm")
+npm.npm_translate_lock(
+    name = "npm",
+    pnpm_lock = "//:pnpm-lock.yaml",
+    verify_node_modules_ignored = "//:.bazelignore",
+)
+use_repo(npm, "npm")
+
+# Step 3: webpack bundle + devserver
+# (patched until the webpack_devserver select() fix is released)
+# bazel_dep(name = "aspect_rules_webpack", version = "0.18.0")
+# single_version_override(
+#     module_name = "aspect_rules_webpack",
+#     patch_strip = 1,
+#     patches = ["//patches:aspect_rules_webpack.patch"],
+# )
+
+# Step 4: TypeScript
+# bazel_dep(name = "aspect_rules_ts", version = "3.10.1")
+#
+# typescript = use_extension("@aspect_rules_ts//ts:extensions.bzl", "typescript")
+# typescript.deps(version_from = "//:package.json")
+# use_repo(typescript, "npm_typescript")
+
+# Step 5: run pnpm through Bazel, so it doesn't need to be installed:
+#   bazel run -- @pnpm -C $PWD install --lockfile-only
+# pnpm = use_extension(
+#     "@aspect_rules_js//npm:extensions.bzl",
+#     "pnpm",
+#     dev_dependency = True,
+# )
+# pnpm.pnpm(pnpm_version_from = "//:package.json")
+# use_repo(pnpm, "pnpm")
+
+# Step 6: Jest
+# bazel_dep(name = "aspect_rules_jest", version = "0.26.0")
+
+# Step 7: SWC, a fast transpiler
+# bazel_dep(name = "aspect_rules_swc", version = "2.7.6")
+# bazel_dep(name = "bazel_skylib", version = "1.9.2")
+
+# Development-only dependencies: not needed by modules that depend on this one.
+
+# BUILD file generation: a prebuilt Gazelle with the JS language and the
+# Orion (Starlark/.axl) plugin host compiled in. No Go toolchain required.
+bazel_dep(name = "aspect_gazelle_prebuilt", version = "0.0.26", dev_dependency = True)

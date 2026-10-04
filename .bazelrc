@@ -1,0 +1,11 @@
+# Don't let the user's environment (PATH etc.) leak into actions.
+common --incompatible_strict_action_env
+
+# Step 4: uncomment once aspect_rules_ts is enabled in MODULE.bazel.
+# Type-check with tsc and use it as the transpiler too (simplest setup; swap
+# for SWC later for speed).
+# common --@aspect_rules_ts//ts:default_to_tsc_transpiler
+# common --@aspect_rules_ts//ts:skipLibCheck=always
+
+# Local overrides that shouldn't be checked in.
+try-import %workspace%/.bazelrc.user

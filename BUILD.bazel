@@ -1,0 +1,15 @@
+# Gazelle directives live in BUILD files as "load-bearing comments".
+# They are inherited by every package below this one.
+
+# Each pnpm workspace package gets an npm_package target that other packages
+# link as node_modules/@demo/<name>. Call it "pkg", the name rules_js links.
+# gazelle:js_npm_package_target_name pkg
+
+# Our sources start out as plain .js. The JS Gazelle language defaults to
+# TypeScript globs, so opt the .js files in. (Step 4 deletes these two lines.)
+# gazelle:js_files **/*.js
+# gazelle:js_test_files **/*.test.js
+
+# The jest.axl Starlark plugin (tools/gazelle/jest.axl) is loaded but switched
+# off until step 6.
+# gazelle:jest disabled

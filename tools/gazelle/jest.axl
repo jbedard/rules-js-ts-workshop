@@ -1,0 +1,117 @@
+"""Generate a jest_test target in every package that contains test files.
+
+This is a Gazelle language written in Starlark (an "Orion" plugin). It runs
+inside the prebuilt Gazelle binary alongside the built-in JS language: the JS
+language generates the ts_project targets, and this plugin generates jest_test
+targets that depend on them.
+
+Enable or disable it per directory with:
+
+    # gazelle:jest enabled|disabled
+"""
+
+# Test file suffixes jest picks up. The JS language already compiles these into
+# a testonly `{dirname}_tests` ts_project; we reference that target by import.
+SPEC_EXTENSIONS = [
+    ".test.ts",
+    ".test.tsx",
+    ".spec.ts",
+    ".spec.tsx",
+]
+
+# An optional jest.config.js, in this package or any ancestor.
+JEST_CONFIG = "jest.config.js"
+CONFIG_TARGET = "jest_config"
+CONFIG_IMPORT = JEST_CONFIG[:JEST_CONFIG.rindex(".")]  # "jest.config"
+
+# Jest reads "type": "module" from the nearest package.json to load tests as ESM.
+PACKAGE_JSON = "package.json"
+
+# Tell Gazelle about the new rule kind: where to load it from, and which
+# attributes it should resolve (turn aspect.Import placeholders into labels).
+aspect.gazelle_rule_kind("jest_test", {
+    "From": "@aspect_rules_jest//jest:defs.bzl",
+    "NonEmptyAttrs": ["data"],
+    "ResolveAttrs": ["config", "data"],
+})
+
+def prepare(_):
+    """Stage 1, per directory: which files does this plugin care about?"""
+    return aspect.PrepareResult(
+        sources = [
+            aspect.SourceExtensions(*SPEC_EXTENSIONS),
+            aspect.SourceExtensions(JEST_CONFIG),
+            aspect.SourceExtensions(PACKAGE_JSON),
+        ],
+    )
+
+def declare(ctx):
+    """Stage 3, per directory: add/remove targets in this BUILD file."""
+    config = None
+    package_json = []
+    specs = []
+    for file in ctx.sources:
+        if file.path == PACKAGE_JSON:
+            package_json = [PACKAGE_JSON]
+        elif file.path.endswith(JEST_CONFIG):
+            # Only a jest.config.js directly in this directory is "local".
+            if "/" not in file.path:
+                config = file.path
+        else:
+            specs.append(file)
+
+    # Wrap a local jest.config.js in a js_library so this package, and any
+    # descendant without its own config, can resolve it (see "ancestor" below).
+    if config:
+        ctx.targets.add(
+            name = CONFIG_TARGET,
+            kind = "js_library",
+            attrs = {"srcs": [config]},
+        )
+    else:
+        ctx.targets.remove(CONFIG_TARGET)
+
+    # No tests in this package: make sure there's no stale jest_test.
+    if len(specs) == 0:
+        ctx.targets.remove("test")
+        return
+
+    ctx.targets.add(
+        name = "test",
+        kind = "jest_test",
+        attrs = {
+            "node_modules": "//:node_modules",
+            # Jest's ESM support needs Node's vm.SourceTextModule, still behind a flag.
+            "node_options": ["--experimental-vm-modules"],
+            # Nearest jest.config.js walking up the tree; optional, so the
+            # attribute is simply dropped when there isn't one.
+            "config": aspect.Import(
+                id = CONFIG_IMPORT,
+                provider = "js",
+                ancestor = True,
+                optional = True,
+            ),
+            # Cross-language resolution: each spec file is an import resolved
+            # against the "js" provider, i.e. symbols indexed by the built-in JS
+            # language. It lands on the ts_project that compiles that spec.
+            "data": package_json + [
+                aspect.Import(
+                    # The js provider keys imports by extensionless,
+                    # repo-root-relative path, e.g. "libs/ui/ProductRow.test".
+                    id = "/".join([ctx.rel, _strip_ext(spec.path)]) if ctx.rel else _strip_ext(spec.path),
+                    provider = "js",
+                    src = spec.path,
+                )
+                for spec in specs
+            ],
+        },
+    )
+
+def _strip_ext(p):
+    return p[:p.rindex(".")]
+
+aspect.orion_extension(
+    id = "jest",
+    prepare = prepare,
+    declare = declare,
+)

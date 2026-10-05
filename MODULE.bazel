@@ -38,13 +38,13 @@ use_repo(typescript, "npm_typescript")
 
 # Step 5: run pnpm through Bazel, so it doesn't need to be installed:
 #   bazel run -- @pnpm -C $PWD install --lockfile-only
-# pnpm = use_extension(
-#     "@aspect_rules_js//npm:extensions.bzl",
-#     "pnpm",
-#     dev_dependency = True,
-# )
-# pnpm.pnpm(pnpm_version_from = "//:package.json")
-# use_repo(pnpm, "pnpm")
+pnpm = use_extension(
+    "@aspect_rules_js//npm:extensions.bzl",
+    "pnpm",
+    dev_dependency = True,
+)
+pnpm.pnpm(pnpm_version_from = "//:package.json")
+use_repo(pnpm, "pnpm")
 
 # Step 6: Jest
 # bazel_dep(name = "aspect_rules_jest", version = "0.26.0")

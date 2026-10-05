@@ -1,3 +1,4 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 # Gazelle directives live in BUILD files as "load-bearing comments".
@@ -7,13 +8,14 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # link as node_modules/@demo/<name>. Call it "pkg", the name rules_js links.
 # gazelle:js_npm_package_target_name pkg
 
-# Our sources start out as plain .js. The JS Gazelle language defaults to
-# TypeScript globs, so opt the .js files in. (Step 4 deletes these two lines.)
-# gazelle:js_files **/*.js
-# gazelle:js_test_files **/*.test.js
-
 # The jest.axl Starlark plugin (tools/gazelle/jest.axl) is loaded but switched
 # off until step 6.
 # gazelle:jest disabled
 
 npm_link_all_packages(name = "node_modules")
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = [":__subpackages__"],
+)

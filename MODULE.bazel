@@ -30,11 +30,11 @@ single_version_override(
 )
 
 # Step 4: TypeScript
-# bazel_dep(name = "aspect_rules_ts", version = "3.10.1")
-#
-# typescript = use_extension("@aspect_rules_ts//ts:extensions.bzl", "typescript")
-# typescript.deps(version_from = "//:package.json")
-# use_repo(typescript, "npm_typescript")
+bazel_dep(name = "aspect_rules_ts", version = "3.10.1")
+
+typescript = use_extension("@aspect_rules_ts//ts:extensions.bzl", "typescript")
+typescript.deps(version_from = "//:package.json")
+use_repo(typescript, "npm_typescript")
 
 # Step 5: run pnpm through Bazel, so it doesn't need to be installed:
 #   bazel run -- @pnpm -C $PWD install --lockfile-only

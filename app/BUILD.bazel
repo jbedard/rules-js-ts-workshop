@@ -1,16 +1,19 @@
 load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_ts//ts:defs.bzl", "ts_project")
 load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle", "webpack_devserver")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 npm_link_all_packages(name = "node_modules")
 
-js_library(
+ts_project(
     name = "app",
     srcs = [
-        "App.js",
-        "FilterableProductTable.js",
-        "index.js",
+        "App.ts",
+        "FilterableProductTable.ts",
+        "index.ts",
     ],
+    declaration = True,
+    tsconfig = "//:tsconfig",
     deps = [
         ":node_modules/@demo/products",
         ":node_modules/@demo/ui",
@@ -21,10 +24,12 @@ js_library(
     ],
 )
 
-js_library(
+ts_project(
     name = "app_tests",
     testonly = True,
-    srcs = ["App.test.js"],
+    srcs = ["App.test.ts"],
+    declaration = True,
+    tsconfig = "//:tsconfig",
     deps = [
         ":app",
         ":node_modules/@jest/globals",

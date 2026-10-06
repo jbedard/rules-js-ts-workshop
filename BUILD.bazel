@@ -1,3 +1,4 @@
+load("@aspect_rules_ts//ts:defs.bzl", "ts_config")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
 # Gazelle directives live in BUILD files as "load-bearing comments".
@@ -17,3 +18,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # gazelle:jest enabled
 
 npm_link_all_packages(name = "node_modules")
+
+ts_config(
+    name = "tsconfig",
+    src = "tsconfig.json",
+    visibility = [":__subpackages__"],
+)

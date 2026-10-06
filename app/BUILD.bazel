@@ -1,3 +1,4 @@
+load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
@@ -32,4 +33,14 @@ js_library(
         ":node_modules/react",
         ":node_modules/react-dom",
     ],
+)
+
+jest_test(
+    name = "test",
+    data = [
+        "package.json",
+        ":app_tests",
+    ],
+    node_modules = "//:node_modules",
+    node_options = ["--experimental-vm-modules"],
 )

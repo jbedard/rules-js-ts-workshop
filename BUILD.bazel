@@ -17,6 +17,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # in every package with test files.
 # gazelle:jest enabled
 
+# Generate our ts_project macro (SWC transpiler) instead of rules_ts's.
+# gazelle:map_kind ts_project ts_project //tools/ts:defs.bzl
+
 npm_link_all_packages(name = "node_modules")
 
 ts_config(

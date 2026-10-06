@@ -1,0 +1,10 @@
+{
+  "name": "@demo/products",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "main": "index.js",
+  "devDependencies": {
+    "@jest/globals": "^30.2.0"
+  }
+}

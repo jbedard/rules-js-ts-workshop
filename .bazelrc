@@ -6,8 +6,8 @@ common --repo_env=DO_NOT_TRACK=1
 
 # Step 5b: uncomment once aspect_rules_ts is enabled in MODULE.bazel.
 # tsc also transpiles, until SWC takes over in step 7.
-# common --@aspect_rules_ts//ts:default_to_tsc_transpiler
-# common --@aspect_rules_ts//ts:skipLibCheck=always
+common --@aspect_rules_ts//ts:default_to_tsc_transpiler
+common --@aspect_rules_ts//ts:skipLibCheck=always
 
 # Local overrides that shouldn't be checked in.
 try-import %workspace%/.bazelrc.user

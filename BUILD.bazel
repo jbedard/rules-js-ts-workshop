@@ -16,4 +16,7 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # in every package with test files.
 # gazelle:jest enabled
 
+# A webpack_config js_library in every package with a webpack config (step 4).
+# gazelle:js_files webpack_config **/webpack.config.cjs
+
 npm_link_all_packages(name = "node_modules")

@@ -44,8 +44,8 @@ typescript.deps(version_from = "//:package.json")
 use_repo(typescript, "npm_typescript")
 
 # Step 6: SWC, a fast transpiler
-# bazel_dep(name = "aspect_rules_swc", version = "2.7.6")
-# bazel_dep(name = "bazel_skylib", version = "1.9.2")
+bazel_dep(name = "aspect_rules_swc", version = "2.7.6")
+bazel_dep(name = "bazel_skylib", version = "1.9.2")
 
 # Development-only dependencies: not needed by modules that depend on this one.
 

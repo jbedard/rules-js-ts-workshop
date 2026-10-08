@@ -3,6 +3,7 @@
     "declaration": true,
     "isolatedModules": true,
     "skipLibCheck": true,
+    "isolatedDeclarations": true,
     "strict": true
   },
   "exclude": ["bazel-*"]

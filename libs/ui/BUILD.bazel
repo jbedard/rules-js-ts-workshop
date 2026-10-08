@@ -15,6 +15,7 @@ ts_project(
         "index.ts",
     ],
     declaration = True,
+    isolated_typecheck = True,
     tsconfig = "//:tsconfig",
     deps = [
         ":node_modules/@demo/price",
@@ -29,6 +30,7 @@ ts_project(
     testonly = True,
     srcs = ["ProductRow.test.ts"],
     declaration = True,
+    isolated_typecheck = True,
     tsconfig = "//:tsconfig",
     deps = [
         ":node_modules/@demo/products",

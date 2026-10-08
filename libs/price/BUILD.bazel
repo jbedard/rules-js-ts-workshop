@@ -12,6 +12,7 @@ ts_project(
         "price.ts",
     ],
     declaration = True,
+    isolated_typecheck = True,
     tsconfig = "//:tsconfig",
 )
 
@@ -20,6 +21,7 @@ ts_project(
     testonly = True,
     srcs = ["price.test.ts"],
     declaration = True,
+    isolated_typecheck = True,
     tsconfig = "//:tsconfig",
     deps = [
         ":node_modules/@jest/globals",

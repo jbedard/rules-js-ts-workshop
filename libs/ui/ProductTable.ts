@@ -1,4 +1,5 @@
 import { Fragment, type ReactElement, createElement as h } from 'react';
+import { totalPrice } from '@demo/price';
 import { type Product, filterProducts, groupByCategory } from '@demo/products';
 import ProductCategoryRow from './ProductCategoryRow.js';
 import ProductRow from './ProductRow.js';
@@ -29,5 +30,6 @@ export default function ProductTable({ products, filterText, inStockOnly }: Prod
         ),
       ),
     ),
+    h('tfoot', null, h('tr', null, h('th', null, 'Total'), h('td', null, totalPrice(visible)))),
   );
 }

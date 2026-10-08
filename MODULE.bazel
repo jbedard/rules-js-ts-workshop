@@ -39,13 +39,13 @@ bazel_dep(name = "bazel_skylib", version = "1.9.2")
 
 # Step 8: run pnpm through Bazel, so it doesn't need to be installed:
 #   bazel run -- @pnpm -C $PWD install --lockfile-only
-# pnpm = use_extension(
-#     "@aspect_rules_js//npm:extensions.bzl",
-#     "pnpm",
-#     dev_dependency = True,
-# )
-# pnpm.pnpm(pnpm_version_from = "//:package.json")
-# use_repo(pnpm, "pnpm")
+pnpm = use_extension(
+    "@aspect_rules_js//npm:extensions.bzl",
+    "pnpm",
+    dev_dependency = True,
+)
+pnpm.pnpm(pnpm_version_from = "//:package.json")
+use_repo(pnpm, "pnpm")
 
 # Development-only dependencies: not needed by modules that depend on this one.
 

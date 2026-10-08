@@ -6,40 +6,26 @@ load("//tools/ts:defs.bzl", "ts_project")
 npm_link_all_packages(name = "node_modules")
 
 ts_project(
-    name = "ui",
+    name = "price",
     srcs = [
-        "ProductCategoryRow.ts",
-        "ProductRow.ts",
-        "ProductTable.ts",
-        "SearchBar.ts",
         "index.ts",
+        "price.ts",
     ],
     declaration = True,
     isolated_typecheck = True,
     tsconfig = "//:tsconfig",
-    deps = [
-        ":node_modules/@demo/price",
-        ":node_modules/@demo/products",
-        ":node_modules/@types/react",
-        ":node_modules/react",
-    ],
 )
 
 ts_project(
-    name = "ui_tests",
+    name = "price_tests",
     testonly = True,
-    srcs = ["ProductRow.test.ts"],
+    srcs = ["price.test.ts"],
     declaration = True,
     isolated_typecheck = True,
     tsconfig = "//:tsconfig",
     deps = [
-        ":node_modules/@demo/products",
         ":node_modules/@jest/globals",
-        ":node_modules/@types/react",
-        ":node_modules/@types/react-dom",
-        ":node_modules/react",
-        ":node_modules/react-dom",
-        ":ui",
+        ":price",
     ],
 )
 
@@ -47,7 +33,7 @@ npm_package(
     name = "pkg",
     srcs = [
         "package.json",
-        ":ui",
+        ":price",
     ],
     visibility = ["//:__pkg__"],
 )
@@ -56,7 +42,7 @@ jest_test(
     name = "test",
     data = [
         "package.json",
-        ":ui_tests",
+        ":price_tests",
     ],
     node_modules = "//:node_modules",
     node_options = ["--experimental-vm-modules"],

@@ -2,6 +2,35 @@ load("@aspect_rules_jest//jest:defs.bzl", "jest_test")
 load("@aspect_rules_js//js:defs.bzl", "js_library")
 load("@npm//:defs.bzl", "npm_link_all_packages")
 
+# Hand-written webpack targets (step 4). Gazelle leaves them alone.
+
+load("@aspect_rules_webpack//webpack:defs.bzl", "webpack_bundle", "webpack_devserver")
+
+# bazel build //app:bundle
+webpack_bundle(
+    name = "bundle",
+    srcs = ["index.html"],
+    chdir = package_name(),
+    node_modules = ":node_modules",
+    output_dir = True,
+    webpack_config = ":webpack_config",
+    deps = [":app"],
+    # A development bundle by default. For a production (minified) one:
+    # args = ["--mode=production"],
+)
+
+# ibazel run //app:devserver, or: aspect run --watch //app:devserver
+webpack_devserver(
+    name = "devserver",
+    chdir = package_name(),
+    data = [
+        "index.html",
+        ":app",
+    ],
+    node_modules = ":node_modules",
+    webpack_config = ":webpack_config",
+)
+
 npm_link_all_packages(name = "node_modules")
 
 js_library(
@@ -43,4 +72,10 @@ jest_test(
     ],
     node_modules = "//:node_modules",
     node_options = ["--experimental-vm-modules"],
+)
+
+js_library(
+    name = "webpack_config",
+    srcs = ["webpack.config.cjs"],
+    deps = [":node_modules/html-webpack-plugin"],
 )

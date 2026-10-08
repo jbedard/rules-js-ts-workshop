@@ -1,6 +1,12 @@
+import type { Product } from './products.js';
+
 // Products whose name contains filterText (case-insensitive), optionally only
 // those in stock.
-export function filterProducts(products, filterText, inStockOnly) {
+export function filterProducts(
+  products: readonly Product[],
+  filterText: string,
+  inStockOnly: boolean,
+): Product[] {
   const query = filterText.toLowerCase();
   return products.filter((product) => {
     if (!product.name.toLowerCase().includes(query)) {
@@ -14,13 +20,15 @@ export function filterProducts(products, filterText, inStockOnly) {
 }
 
 // Group products by category, keeping the order categories first appear in.
-export function groupByCategory(products) {
-  const groups = new Map();
+export function groupByCategory(products: readonly Product[]): Map<string, Product[]> {
+  const groups = new Map<string, Product[]>();
   for (const product of products) {
-    if (!groups.has(product.category)) {
-      groups.set(product.category, []);
+    let group = groups.get(product.category);
+    if (!group) {
+      group = [];
+      groups.set(product.category, group);
     }
-    groups.get(product.category).push(product);
+    group.push(product);
   }
   return groups;
 }

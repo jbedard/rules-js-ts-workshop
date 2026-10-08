@@ -1,9 +1,15 @@
-import { Fragment, createElement as h } from 'react';
-import { filterProducts, groupByCategory } from '@demo/products';
+import { Fragment, type ReactElement, createElement as h } from 'react';
+import { type Product, filterProducts, groupByCategory } from '@demo/products';
 import ProductCategoryRow from './ProductCategoryRow.js';
 import ProductRow from './ProductRow.js';
 
-export default function ProductTable({ products, filterText, inStockOnly }) {
+export interface ProductTableProps {
+  products: readonly Product[];
+  filterText: string;
+  inStockOnly: boolean;
+}
+
+export default function ProductTable({ products, filterText, inStockOnly }: ProductTableProps): ReactElement {
   const visible = filterProducts(products, filterText, inStockOnly);
   const groups = groupByCategory(visible);
 

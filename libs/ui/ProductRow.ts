@@ -1,11 +1,11 @@
-import { createElement as h } from 'react';
+import { type ReactElement, createElement as h } from 'react';
 import type { Product } from '@demo/products';
 
 export interface ProductRowProps {
   product: Product;
 }
 
-export default function ProductRow({ product }: ProductRowProps) {
+export default function ProductRow({ product }: ProductRowProps): ReactElement {
   const name = product.stocked
     ? product.name
     : h('span', { style: { color: 'red' } }, product.name);

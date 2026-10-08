@@ -1,0 +1,13 @@
+load("@aspect_gazelle_prebuilt//:def.bzl", "aspect_gazelle")
+
+# bazel run //tools/gazelle        -> update BUILD files
+# bazel run //tools/gazelle:gazelle.check  -> CI: fail if BUILD files are stale
+# aspect gazelle                   -> same, via the Aspect CLI (defaults to this target)
+aspect_gazelle(
+    name = "gazelle",
+    # Starlark plugins. Listing any here also enables the "orion" language.
+    extensions = ["jest.axl"],
+    # Built-in (Go) languages compiled into the prebuilt binary.
+    languages = ["js"],
+    with_check = True,
+)

@@ -20,6 +20,9 @@ load("@npm//:defs.bzl", "npm_link_all_packages")
 # A webpack_config js_library in every package with a webpack config (step 4).
 # gazelle:js_files webpack_config **/webpack.config.cjs
 
+# Generate our ts_project macro (SWC transpiler) instead of rules_ts's.
+# gazelle:map_kind ts_project ts_project //tools/ts:defs.bzl
+
 npm_link_all_packages(name = "node_modules")
 
 ts_config(

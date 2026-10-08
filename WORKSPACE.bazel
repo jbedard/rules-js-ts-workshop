@@ -1,0 +1,1 @@
+# Lets ibazel <0.26.0 find the workspace root. TODO: delete once everyone is on ibazel >=0.26.0

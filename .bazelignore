@@ -1,0 +1,5 @@
+# rules_js requires every pnpm node_modules folder to be ignored by Bazel.
+node_modules
+app/node_modules
+libs/products/node_modules
+libs/ui/node_modules

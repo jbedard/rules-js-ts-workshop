@@ -2,6 +2,7 @@ import { Fragment, type ReactElement, createElement as h } from 'react';
 import { type Product, filterProducts, groupByCategory } from '@demo/products';
 import ProductCategoryRow from './ProductCategoryRow.js';
 import ProductRow from './ProductRow.js';
+import { sumBy } from 'es-toolkit';
 
 export interface ProductTableProps {
   products: readonly Product[];
@@ -29,5 +30,6 @@ export default function ProductTable({ products, filterText, inStockOnly }: Prod
         ),
       ),
     ),
+    h('tfoot', null, h('tr', null, h('th', null, 'Total'), h('td', null, `$${sumBy(visible, (p) => Number(p.price.slice(1)))}`))),
   );
 }

@@ -20,6 +20,7 @@ ts_project(
     deps = [
         ":node_modules/@demo/products",
         ":node_modules/@types/react",
+        ":node_modules/es-toolkit",
         ":node_modules/react",
     ],
 )

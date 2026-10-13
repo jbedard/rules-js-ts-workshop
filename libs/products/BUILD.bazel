@@ -1,0 +1,33 @@
+load("@aspect_rules_js//js:defs.bzl", "js_library")
+load("@aspect_rules_js//npm:defs.bzl", "npm_package")
+load("@npm//:defs.bzl", "npm_link_all_packages")
+
+npm_link_all_packages(name = "node_modules")
+
+js_library(
+    name = "products",
+    srcs = [
+        "filter.js",
+        "index.js",
+        "products.js",
+    ],
+)
+
+js_library(
+    name = "products_tests",
+    testonly = True,
+    srcs = ["filter.test.js"],
+    deps = [
+        ":node_modules/@jest/globals",
+        ":products",
+    ],
+)
+
+npm_package(
+    name = "pkg",
+    srcs = [
+        "package.json",
+        ":products",
+    ],
+    visibility = ["//:__pkg__"],
+)

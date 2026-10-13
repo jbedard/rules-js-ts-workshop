@@ -1,7 +1,12 @@
-import { createElement as h, useState } from 'react';
+import { type ReactElement, createElement as h, useState } from 'react';
+import type { Product } from '@demo/products';
 import { ProductTable, SearchBar } from '@demo/ui';
 
-export default function FilterableProductTable({ products }) {
+export interface FilterableProductTableProps {
+  products: readonly Product[];
+}
+
+export default function FilterableProductTable({ products }: FilterableProductTableProps): ReactElement {
   const [filterText, setFilterText] = useState('');
   const [inStockOnly, setInStockOnly] = useState(false);
 
